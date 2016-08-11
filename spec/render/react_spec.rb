@@ -1,11 +1,9 @@
 require 'spec_helper'
 
 describe Render::React do
-  it 'has a version number' do
-    expect(Render::React::VERSION).not_to be nil
-  end
+  subject { Class.new.extend(Render::React) }
 
-  it 'does something useful' do
-    expect(false).to eq(true)
+  it 'renders something' do
+    expect(subject.react('test', foo: :bar)).to eq("test([{:foo=>:bar}])")
   end
 end
