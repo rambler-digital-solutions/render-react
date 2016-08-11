@@ -1,7 +1,11 @@
 require 'spec_helper'
 
 describe Render::React do
-  subject { Class.new.include(Render::React).new }
+  subject do
+    klass = Class.new.include(Render::React)
+    klass.render_react_from FIXTURES_PATH
+    klass.new
+  end
 
   it 'evals plain js' do
     expect(
@@ -11,7 +15,7 @@ describe Render::React do
 
   it 'renders simple component' do
     name = 'Frank'
-    output = subject.react(
+    output = subject.render_react(
       :HelloMessage,
       name: name
     )
@@ -21,9 +25,9 @@ describe Render::React do
 
   it 'doesn\'t have memory leaks' do
     samples = []
-    10.times do |i|
-      1000.times do |j|
-        output = subject.react(
+    10.times do |_i|
+      1000.times do |_j|
+        output = subject.render_react(
           :HelloMessage,
           name: :LeakyName
         )
