@@ -19,34 +19,20 @@ describe Render::React do
     expect(output).to include(name)
   end
 
-  xit 'doesn\'t have memory leak' do
-    samples1 = []
-    10.times do |_i|
-      100.times do |_j|
+  it 'doesn\'t have memory leaks' do
+    samples = []
+    10.times do |i|
+      1000.times do |j|
         output = subject.react(
           :HelloMessage,
           name: :LeakyName
         )
       end
-      pid, size = `ps ax -o pid,rss | grep -E "^[[:space:]]*#{$PROCESS_ID}"`.strip.split.map(&:to_i)
-      samples1 << size
-      GC.start
+      ps = `ps ax -o pid,rss | grep -E "^[[:space:]]+#{$$}"`.strip
+      pid, size = ps.split.map(&:to_i)
+      samples << size
     end
-    puts "RSS #{samples1.inject(:+).to_f / samples1.size}"
-
-    samples1 = []
-    10.times do |_i|
-      100.times do |_j|
-        output = subject.react(
-          :HelloMessage,
-          name: :LeakyName
-        )
-      end
-      pid, size = `ps ax -o pid,rss | grep -E "^[[:space:]]*#{$PROCESS_ID}"`.strip.split.map(&:to_i)
-      samples1 << size
-      GC.start
-    end
-    puts "RSS #{samples1.inject(:+).to_f / samples1.size}"
-    expect(true).to be_true
+    average = samples.inject(:+).to_f / samples.size
+    expect(average < samples.first).to be_truthy
   end
 end
