@@ -1,6 +1,6 @@
-require 'active_support/inflector'
 require 'json'
 require 'mini_racer'
+require 'active_support/inflector'
 
 require 'render/react/config'
 require 'render/react/compiler'
