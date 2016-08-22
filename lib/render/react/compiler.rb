@@ -33,24 +33,8 @@ module Render
       def render(component_class, **props)
         raise "#{component_class} component not found." unless lookup[component_class.to_sym]
         cxt.eval <<-EOS
-
-          var Props = #{JSON.dump(props)};
-          var IsomorphicWrapper = React.createClass({
-            render: function render() {
-              return React.createElement(
-                'div',
-                {
-                  'data-react-component': '#{component_class}',
-                  'data-react-isomorphic': true,
-                  'data-react-props': JSON.stringify(Props)
-                },
-                React.createElement(#{component_class}, Props)
-              );
-            }
-          });
-
           ReactDOMServer.renderToString(
-            React.createElement(IsomorphicWrapper, Props)
+            React.createElement(#{component_class}, #{JSON.dump(props)})
           );
         EOS
       end

@@ -15,7 +15,9 @@ module Render
     end
 
     def render_react(component_class, **props)
-      Compiler.render(component_class, **props)
+      <<-EOS
+        <span data-react-isomorphic='true' data-react-component='#{component_class}' data-react-props='#{JSON.dump(props)}'>#{Compiler.render(component_class, **props)}</span>
+      EOS
     end
   end
 end
