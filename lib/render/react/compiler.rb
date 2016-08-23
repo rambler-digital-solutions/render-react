@@ -1,22 +1,25 @@
 module Render
   module React
     module Compiler
+      def lookup
+        @lookup ||= {}
+      end
+
       def cxt
         return @cxt if @cxt
         @cxt = Config.new_context
-        %w(
-          react/dist/react.min
-          react-dom/dist/react-dom-server.min
-        ).each do |file|
-          @cxt.load(
-            File.join(Config.js_path, file + '.js')
-          )
-        end
-        @cxt
-      end
 
-      def lookup
-        @lookup ||= {}
+        js_lib_files = Dir.glob(
+          File.join(
+            Config.gem_js_path,
+            'compiler',
+            '**',
+            '*.js'
+          )
+        )
+        js_lib_files.each { |file| @cxt.load(file) }
+
+        @cxt
       end
 
       def load_components
@@ -31,7 +34,9 @@ module Render
       end
 
       def render(component_class, **props)
-        raise "#{component_class} component not found." unless lookup[component_class.to_sym]
+        unless lookup[component_class.to_sym]
+          raise "#{component_class} component not found."
+        end
         cxt.eval <<-EOS
           ReactDOMServer.renderToString(
             React.createElement(#{component_class}, #{JSON.dump(props)})

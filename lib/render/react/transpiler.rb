@@ -4,8 +4,17 @@ module Render
       def cxt
         return @cxt if @cxt
         @cxt = Config.new_context
-        @cxt.load(Config.js_path + '/babel-standalone/babel.min.js')
-        @cxt.load(Config.js_path + '/react/dist/react.js')
+
+        js_lib_files = Dir.glob(
+          File.join(
+            Config.gem_js_path,
+            'transpiler',
+            '**',
+            '*.js'
+          )
+        )
+        js_lib_files.each { |file| @cxt.load(file) }
+
         @cxt
       end
 
@@ -17,13 +26,15 @@ module Render
         code.gsub!(/import[^;]+;/, '')
         code.gsub!(/require[^;]+;/, '')
 
-        transormation  =<<-EOF
+        transormation = <<-EOF
           var input = #{JSON.dump(code)};
-          Babel.transform(input, {"presets": ['stage-0', 'es2015', 'react'], "plugins": ["transform-class-properties"]}).code;
+          Babel.transform(input, {
+            "presets": ['stage-0', 'es2015', 'react'],
+            "plugins": ["transform-class-properties"]
+          }).code;
         EOF
-
         result = cxt.eval transormation
-        result = "var Component = React.Component;" + result
+        result = 'var Component = React.Component;' + result
 
         [component_name, result]
       end

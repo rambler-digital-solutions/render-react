@@ -14,11 +14,11 @@ module Render
         MiniRacer::Context.new
       end
 
-      def js_path
-        @js_path ||= File.expand_path('../../../../js/node_modules', __FILE__)
+      def gem_js_path
+        @gem_js_path ||= File.expand_path('../../../../js/dist', __FILE__)
       end
 
-      module_function :path, :paths, :new_context, :js_path
+      module_function :path, :paths, :new_context, :gem_js_path
     end
   end
 end
