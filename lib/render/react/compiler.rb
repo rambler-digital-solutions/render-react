@@ -23,6 +23,7 @@ module Render
       end
 
       def load_components
+        return if @components_loaded
         Config.paths.each do |path|
           files = Dir.glob(File.join(path, '**', '*.js'))
           files.each do |filename|
@@ -31,6 +32,7 @@ module Render
             lookup[name.to_sym] = true
           end
         end
+        @components_loaded = true
       end
 
       def render(component_class, **props)

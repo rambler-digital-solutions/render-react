@@ -20,7 +20,9 @@ module Render
 
       def babelify(filepath)
         code = File.read(filepath)
-        component_name = code.match(/export default (\w+?);/)[1]
+        component_name_match = code.match(/export default (\w+?);/)
+        raise "can't find component name in #{filepath}" unless component_name_match
+        component_name = component_name_match[1]
 
         code.gsub!(/export[^;]+;/, '')
         code.gsub!(/import[^;]+;/, '')

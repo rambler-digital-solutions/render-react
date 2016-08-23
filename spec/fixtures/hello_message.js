@@ -12,3 +12,5 @@ var HelloMessage = React.createClass({
     );
   }
 });
+
+export default HelloMessage;
