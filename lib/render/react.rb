@@ -1,5 +1,5 @@
 require 'json'
-require 'mini_racer'
+require 'v8'
 require 'active_support/inflector'
 
 require 'render/react/config'
@@ -10,7 +10,7 @@ require 'render/react/version'
 module Render
   module React
     def render_react(component_class, **props)
-      Compiler.load_components
+      Compiler.bootstrap
       "<span data-react-isomorphic='true' " \
         "data-react-component='#{component_class}' " \
         "data-react-props='#{JSON.dump(props)}'>" \

@@ -5,9 +5,9 @@ module Render
         @lookup ||= {}
       end
 
-      def cxt
-        return @cxt if @cxt
+      def create_context
         @cxt = Config.new_context
+        @durability = Config::CONTEXT_DURABILITY
 
         js_lib_files = Dir.glob(
           File.join(
@@ -17,36 +17,45 @@ module Render
             '*.js'
           )
         )
-        js_lib_files.each { |file| @cxt.load(file) }
 
-        @cxt
+        js_lib_files.each { |file| @cxt.load(file) }
       end
 
-      def load_components
-        return if @components_loaded
+      def bootstrap
+        if @durability && @durability <= 0
+          @cxt.destroy
+          @cxt = nil
+        end
+
+        create_context unless @cxt
+
         Config.paths.each do |path|
           files = Dir.glob(File.join(path, '**', '*.js'))
           files.each do |filename|
             name, code = Transpiler.babelify(filename)
-            cxt.eval(code)
+            @cxt.eval(code)
             lookup[name.to_sym] = true
           end
         end
-        @components_loaded = true
+
+        @durability -= 1
       end
 
       def render(component_class, **props)
         unless lookup[component_class.to_sym]
           raise "#{component_class} component not found."
         end
-        cxt.eval <<-EOS
-          ReactDOMServer.renderToString(
-            React.createElement(#{component_class}, #{JSON.dump(props)})
-          );
+        @cxt.eval <<-EOS
+          var component = React.createElement(#{component_class}, #{JSON.dump(props)});
+          ReactDOMServer.renderToString(component);
         EOS
       end
 
-      module_function :load_components, :render, :cxt, :lookup
+      def evaljs(code)
+        @cxt.eval(code)
+      end
+
+      module_function :bootstrap, :create_context, :render, :lookup, :evaljs
     end
   end
 end

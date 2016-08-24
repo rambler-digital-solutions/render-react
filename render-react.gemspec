@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
 
-  spec.add_dependency "mini_racer"
+  spec.add_dependency "therubyracer"
   spec.add_dependency "activesupport"
   spec.require_paths = ["lib"]
 

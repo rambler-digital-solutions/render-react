@@ -1,6 +1,8 @@
 module Render
   module React
     module Config
+      CONTEXT_DURABILITY = 100_000
+
       def path(*paths)
         @paths ||= []
         @paths += paths
@@ -11,7 +13,7 @@ module Render
       end
 
       def new_context
-        MiniRacer::Context.new
+        V8::Context.new
       end
 
       def gem_js_path
