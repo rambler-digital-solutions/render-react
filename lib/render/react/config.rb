@@ -13,7 +13,9 @@ module Render
       end
 
       def new_context
-        V8::Context.new
+        cxt = V8::Context.new
+        cxt.load File.join(gem_js_path, 'react.js')
+        cxt
       end
 
       def gem_js_path

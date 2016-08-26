@@ -21,14 +21,7 @@ module Render
         js_lib_files.each { |file| @cxt.load(file) }
       end
 
-      def bootstrap
-        if @durability && @durability <= 0
-          @cxt.destroy
-          @cxt = nil
-        end
-
-        create_context unless @cxt
-
+      def load_components
         Config.paths.each do |path|
           files = Dir.glob(File.join(path, '**', '*.js'))
           files.each do |filename|
@@ -37,8 +30,22 @@ module Render
             lookup[name.to_sym] = true
           end
         end
+      end
 
-        @durability -= 1
+      def bootstrap
+        if @durability
+          if @durability <= 0
+            @cxt.destroy
+            @cxt = nil
+            create_context
+            load_components
+          else
+            @durability -= 1
+          end
+        else
+          create_context
+          load_components
+        end
       end
 
       def render(component_class, **props)
@@ -55,7 +62,7 @@ module Render
         @cxt.eval(code)
       end
 
-      module_function :bootstrap, :create_context, :render, :lookup, :evaljs
+      module_function :bootstrap, :create_context, :render, :lookup, :evaljs, :load_components
     end
   end
 end
