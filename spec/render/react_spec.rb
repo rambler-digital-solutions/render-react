@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Render::React do
   before :each do
     Render::React::Config.path FIXTURES_PATH
-    Render::React::Compiler.bootstrap
   end
 
   subject do
@@ -12,6 +11,7 @@ describe Render::React do
   end
 
   it 'evals plain js' do
+    Render::React::Compiler.bootstrap
     expect(
       Render::React::Compiler.evaljs('2*2')
     ).to eq(4)
@@ -27,8 +27,21 @@ describe Render::React do
     expect(output).to include(name)
   end
 
+  it 'recreates itself when durability is <= 0' do
+    Render::React::Compiler.instance_variable_set(:@durability, 1)
+    2.times do
+      output = subject.render_react(
+        :HelloMessage,
+        name: 'Frank'
+      )
+    end
+    expect(
+      Render::React::Compiler.instance_variable_get(:@durability)
+    ).to eq(Render::React::Config::CONTEXT_DURABILITY - 1)
+  end
+
   it 'doesn\'t have memory leaks' do
-    require 'objspace'
+    Render::React::Compiler.bootstrap
     samples = []
     10.times do |_i|
       100.times do |_j|

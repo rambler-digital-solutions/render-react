@@ -34,8 +34,8 @@ module Render
 
       def bootstrap
         if @durability
-          if @durability <= 0
-            @cxt.destroy
+          if @durability <= 1
+            @cxt.dispose
             @cxt = nil
             create_context
             load_components
