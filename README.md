@@ -20,7 +20,8 @@ module ApplicationHelper
   include Render::React
   ...
 ```
-1. Create initializer config/initializers/render_react.rb
+
+2. Create initializer config/initializers/render_react.rb
 ```ruby
 Render::React::Config.path File.join(Rails.root, 'app/assets/javascripts/components-local')
 Render::React::Config.path File.join(Rails.root, 'app/assets/javascripts/components-other')
@@ -32,7 +33,8 @@ Render::React::Config.path(
   File.join(Rails.root, 'app/assets/javascripts/components-other')
 )
 ```
-1.
+
+3. Render react component into your view (e.g. slim):
 ```ruby
 == render_react 'Card', \
   className: 'city-block swiper-slide', \
@@ -57,13 +59,13 @@ In terms of rendering time:
 ```
 
 In terms of memory.
-```
+```bash
 ps x -o rss,command  | grep "unicorn" | grep -v grep | sort
 ```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/render-react. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rambler-digital-solutions/render-react. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 
 ## License
