@@ -11,7 +11,7 @@ It uses [V8 engine](https://developers.google.com/v8/) as dynamic library for Ja
 ## Installation
 Just add render-react to your Gemfile and you're done.
 ```bash
-echo 'gem render-react' >> Gemfile
+echo "gem 'render-react'" >> Gemfile
 bundle install
 ```
 
