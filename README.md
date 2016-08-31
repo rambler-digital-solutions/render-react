@@ -38,7 +38,7 @@ Render::React::Config.path(
 )
 ```
 
-#### 3. Render react component into your view (e.g. slim):
+#### 3. Render react component into your view (e.g. slim)
 
 ```ruby
 == render_react 'Card', \
