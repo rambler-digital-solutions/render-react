@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Alexander Krasnoschekov"]
   spec.email         = ["akrasnoschekov@gmail.com"]
 
-  spec.summary       = "Gem that renders react components into views"
-  spec.homepage      = "https://gitlab.rambler.ru/rnd/render-react"
+  spec.summary       = "Renders React.js components into your Ruby views"
+  spec.homepage      = "https://github.com/rambler-digital-solutions/render-react"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

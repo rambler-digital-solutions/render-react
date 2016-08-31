@@ -1,10 +1,12 @@
+### Work in progress, please beware.
+
 ## Overview
 This gem renders [React](https://facebook.github.io/react/) components into your views!
 
 It's plain Ruby so you can use it with almost every Ruby framework out there.
 
 ## Design
-It uses [V8 engine](https://developers.google.com/v8/) as dynamic library to render JavaScript. When your application loads React components are discovered, compiled from ES6 to ES5 and loaded into memory. When you call `render_react` from your view - rendering is done from preloaded components at speeds comparable to native Ruby partials.
+It uses [V8 engine](https://developers.google.com/v8/) as dynamic library for JavaScript execution. On application load React components are discovered, compiled from ES6 to ES5 and executed into memory. When you call `render_react` from your view - rendering is done from preloaded components at speeds comparable to native Ruby partials.
 
 ## Installation
 Just add render-react to your Gemfile and you're done.
@@ -24,13 +26,13 @@ module ApplicationHelper
 2. Create initializer config/initializers/render_react.rb
 ```ruby
 Render::React::Config.path File.join(Rails.root, 'app/assets/javascripts/components-local')
-Render::React::Config.path File.join(Rails.root, 'app/assets/javascripts/components-other')
+Render::React::Config.path File.join(Rails.root, 'some/other/directory')
 ```
 or
 ```ruby
 Render::React::Config.path(
   File.join(Rails.root, 'app/assets/javascripts/components-other'),
-  File.join(Rails.root, 'app/assets/javascripts/components-other')
+  File.join(Rails.root, 'some/other/directory')
 )
 ```
 
