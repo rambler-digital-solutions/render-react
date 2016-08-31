@@ -16,14 +16,16 @@ bundle install
 ```
 
 ## Usage (Rails)
-1. Include Render::React into your ApplicationHelper
+#### 1. Include Render::React into your ApplicationHelper
+
 ```ruby
 module ApplicationHelper
   include Render::React
   ...
 ```
 
-2. Create initializer config/initializers/render_react.rb
+#### 2. Create initializer config/initializers/render_react.rb
+
 ```ruby
 Render::React::Config.path File.join(Rails.root, 'app/assets/javascripts/components-local')
 Render::React::Config.path File.join(Rails.root, 'some/other/directory')
@@ -36,7 +38,8 @@ Render::React::Config.path(
 )
 ```
 
-3. Render react component into your view (e.g. slim):
+#### 3. Render react component into your view (e.g. slim):
+
 ```ruby
 == render_react 'Card', \
   className: 'city-block swiper-slide', \
