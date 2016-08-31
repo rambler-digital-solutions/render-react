@@ -1,34 +1,65 @@
-# Render::React
+## Overview
+This gem renders [React](https://facebook.github.io/react/) components into your views!
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/render/react`. To experiment with that code, run `bin/console` for an interactive prompt.
+It's plain Ruby so you can use it with almost every Ruby framework out there.
 
-TODO: Delete this and the text above, and describe your gem
+## Design
+It uses [V8 engine](https://developers.google.com/v8/) as dynamic library to render JavaScript. When your application loads React components are discovered, compiled from ES6 to ES5 and loaded into memory. When you call `render_react` from your view - rendering is done from preloaded components at speeds comparable to native Ruby partials.
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'render-react'
+Just add render-react to your Gemfile and you're done.
+```bash
+echo 'gem render-react' >> Gemfile
+bundle install
 ```
 
-And then execute:
+## Usage (Rails)
+1. Include Render::React into your ApplicationHelper
+```ruby
+module ApplicationHelper
+  include Render::React
+  ...
+```
+1. Create initializer config/initializers/render_react.rb
+```ruby
+Render::React::Config.path File.join(Rails.root, 'app/assets/javascripts/components-local')
+Render::React::Config.path File.join(Rails.root, 'app/assets/javascripts/components-other')
+```
+or
+```ruby
+Render::React::Config.path(
+  File.join(Rails.root, 'app/assets/javascripts/components-other'),
+  File.join(Rails.root, 'app/assets/javascripts/components-other')
+)
+```
+1.
+```ruby
+== render_react 'Card', \
+  className: 'city-block swiper-slide', \
+  href: city_path(city.slug), \
+  text: city.location, \
+  name: city.name, \
+  cover: image_path(city.cover.square_thumb), \
+  count: city.compilations.length
+```
 
-    $ bundle
+## Debugging
+To be sure that everything is tip-top.
 
-Or install it yourself as:
+In terms of rendering time:
+```ruby
+- start = Time.now
+== render_react 'ComponentName', \
+  className: 'city-block swiper-slide', \
+  ...
+- finish = Time.now
+- Rails.logger.warn "Render::React durability: #{Render::React::Compiler.instance_variable_get(:@durability)} time: #{finish - start}"
+```
 
-    $ gem install render-react
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+In terms of memory.
+```
+ps x -o rss,command  | grep "unicorn" | grep -v grep | sort
+```
 
 ## Contributing
 
@@ -38,4 +69,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
