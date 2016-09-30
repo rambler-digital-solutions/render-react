@@ -29,6 +29,7 @@ module ApplicationHelper
 ```ruby
 Render::React::Config.path File.join(Rails.root, 'app/assets/javascripts/components-local')
 Render::React::Config.path File.join(Rails.root, 'some/other/directory')
+Render::React::Config.set_durability(1) if Rails.env.development? # live reload in dev mode
 ```
 or
 ```ruby
