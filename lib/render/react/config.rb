@@ -1,7 +1,15 @@
 module Render
   module React
     module Config
-      CONTEXT_DURABILITY = 100_000
+      @context_durability = 100_000
+
+      def set_durability(number)
+        @context_durability = number
+      end
+
+      def durability
+        @context_durability
+      end
 
       def path(*paths)
         @paths ||= []
@@ -22,7 +30,7 @@ module Render
         @gem_js_path ||= File.expand_path('../../../../js/dist', __FILE__)
       end
 
-      module_function :path, :paths, :new_context, :gem_js_path
+      module_function :path, :paths, :new_context, :gem_js_path, :set_durability, :durability
     end
   end
 end

@@ -7,7 +7,7 @@ module Render
 
       def create_context
         @cxt = Config.new_context
-        @durability = Config::CONTEXT_DURABILITY
+        @durability = Config.durability
 
         js_lib_files = Dir.glob(
           File.join(
@@ -35,10 +35,13 @@ module Render
       def bootstrap
         if @durability
           if @durability <= 1
-            @cxt.dispose
+            old_cxt = @cxt
+
             @cxt = nil
             create_context
             load_components
+
+            old_cxt.dispose
           else
             @durability -= 1
           end

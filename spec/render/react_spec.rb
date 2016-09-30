@@ -37,7 +37,7 @@ describe Render::React do
     end
     expect(
       Render::React::Compiler.instance_variable_get(:@durability)
-    ).to eq(Render::React::Config::CONTEXT_DURABILITY - 1)
+    ).to eq(Render::React::Config.durability - 1)
   end
 
   it 'doesn\'t have memory leaks' do
@@ -53,7 +53,7 @@ describe Render::React do
       ps = `ps ax -o rss,pid | grep " #{$$}"`.strip
       size, pid = ps.split.map(&:to_i)
       samples << size
-      while !V8::C::V8::IdleNotification(); end
+      until V8::C::V8::IdleNotification(); end
     end
     average = samples.inject(:+).to_f / samples.size
     expect(average < samples.first).to be_truthy
